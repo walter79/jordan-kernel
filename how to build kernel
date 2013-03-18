@@ -1,0 +1,6 @@
+git clone https://github.com/walter79/jordan-kernel
+
+export ARCH=arm
+export CROSS_COMPILE=/path to your toolchain/arm-eabi-4.4.3/bin/arm-eabi-
+make mapphone_defconfi
+make -jX                  (X=numbers of CPU core or possible threads)

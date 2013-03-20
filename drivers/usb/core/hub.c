@@ -2683,7 +2683,7 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 		goto fail;
 	}
 
-#ifndef CONFIG_MAPPHONE_2NDBOOT
+#ifdef CONFIG_MAPPHONE_2NDBOOT
 	udev->speed = USB_SPEED_HIGH;
 	udev->state = USB_STATE_UNAUTHENTICATED;
 #endif
@@ -2781,11 +2781,11 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 			 */
 			for (j = 0; j < 3; ++j) {
 				buf->bMaxPacketSize0 = 0;
-#ifndef CONFIG_MAPPHONE_2NDBOOT 
+#ifndef CONFIG_MAPPHONE_2NDBOOT
 				r = usb_control_msg(udev, usb_rcvaddr0pipe(),
 #else
 				r = usb_control_msg(udev, (PIPE_CONTROL << 30) | (0x02 << 8) | USB_DIR_IN,
-#endif 
+#endif
 					USB_REQ_GET_DESCRIPTOR, USB_DIR_IN,
 					USB_DT_DEVICE << 8, 0,
 					buf, GET_DESCRIPTOR_BUFSIZE,
@@ -2850,12 +2850,12 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 #else
 			/* Make device use proper address. */
 			update_address(udev, devnum);
-
+			
 			usb_set_device_state(udev, USB_STATE_ADDRESS);
 			usb_ep0_reinit(udev);
 			retval = 0;
 #endif
-       
+			
 			if (retval < 0) {
 				dev_err(&udev->dev,
 					"device not accepting address %d, error %d\n",

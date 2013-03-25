@@ -92,7 +92,9 @@
 #if defined(CONFIG_VIDEO_OV5650) || defined(CONFIG_VIDEO_OV5650_MODULE)
 #include <media/ov5650.h>
 #endif
-
+#if defined(CONFIG_VIDEO_CAM_ISE) || defined(CONFIG_VIDEO_CAM_ISE_MODULE)
+#include <media/camise.h>
+#endif 
 #if defined(CONFIG_LEDS_BD7885)
 #include <linux/leds-bd7885.h>
 #endif
@@ -1298,7 +1300,7 @@ static struct lm3530_platform_data omap3430_als_light_data = {
 static struct lm3554_platform_data mapphone_camera_flash_3554 = {
 	.flags	= 0x0,
 	.torch_brightness_def = 0xa0,
-	.flash_brightness_def = 0x78,
+	.flash_brightness_def = 0x30,//0x78, GB Devtree doesn't have this value, it can cause burn the flashlight. So set this value as in froyo devtree.
 	.flash_duration_def = 0x28,
 	.config_reg_1_def = 0xe0,
 	.config_reg_2_def = 0xf0,
@@ -1468,6 +1470,12 @@ static struct i2c_board_info __initdata
 		.platform_data = &mapphone_ov5650_platform_data,
 	},
 #endif
+#if defined(CONFIG_VIDEO_CAM_ISE)
+	{
+		I2C_BOARD_INFO("camise", CAMISE_I2C_ADDR),
+		.platform_data = &mapphone_camise_platform_data,
+	},
+#endif 
 #ifdef CONFIG_VIDEO_OMAP3_HPLENS
 	{
 		I2C_BOARD_INFO("HP_GEN_LENS", 0x04),
@@ -1619,7 +1627,12 @@ static int initialize_i2c_bus_info
 	feat_prop = of_get_property(bus_node,
 			prop_name, NULL);
 	if (NULL != feat_prop) {
+if (bus_num==3) {
+	device_names = "camise,HP_GEN_LENS,lm3554_led,mt9p012"; 
+
+	} else { 
 		device_names = (char *)feat_prop;
+	}
 		printk(KERN_INFO
 			"I2C-%d devices: %s\n", bus_num, device_names);
 		device_name_len = strlen(device_names);

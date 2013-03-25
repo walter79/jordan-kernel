@@ -61,7 +61,6 @@ static int mmc_schedule_delayed_work(struct delayed_work *work,
 static int mmc_schedule_delayed_work_lock(struct delayed_work *work,
 				     unsigned long delay)
 {
-
 	return queue_delayed_work(workqueue, work, delay);
 }
 
@@ -541,6 +540,7 @@ void mmc_host_deeper_disable(struct work_struct *work)
 		return;
 	mmc_host_do_disable(host, 1);
 	mmc_do_release_host(host);
+
 }
 
 /**
@@ -1060,7 +1060,7 @@ void mmc_detect_change(struct mmc_host *host, unsigned long delay)
 	WARN_ON(host->removed);
 	spin_unlock_irqrestore(&host->lock, flags);
 #endif
-	wake_lock(&mmc_delayed_work_wake_lock);
+wake_lock(&mmc_delayed_work_wake_lock);
 	mmc_schedule_delayed_work_lock(&host->detect, delay);
 }
 

@@ -6,5 +6,5 @@ make mrproper
 export ARCH=arm
 export CROSS_COMPILE=/path to your toolchain/arm-eabi-4.4.3/bin/arm-eabi-
 
-ake mapphone_defconfig
+make mapphone_defconfig
 make -jX                  (X=numbers of CPU core or possible threads)

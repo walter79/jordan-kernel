@@ -1,4 +1,4 @@
-git clone https://github.com/walter79/jordan-kernel
+git clone https://github.com/walter79/jordan-kernel -b CyanMobile
 
 make clean
 make mrproper
